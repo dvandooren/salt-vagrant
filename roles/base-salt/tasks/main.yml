@@ -1,0 +1,6 @@
+---
+# FILE: roles/base-salt/tasks/main.yml
+#
+
+- include: pre_install.yml tags=base-salt_pre_install
+- include: install.yml tags=base-salt_install

@@ -1,0 +1,10 @@
+---
+# FILE: roles/salt-master/tasks/install.yml
+#
+
+- name: Install Salt Master
+  yum: name='salt-master' state=present
+  notify: restart salt-master
+
+- name: Enable salt-master service
+  service: name=salt-master enabled=yes

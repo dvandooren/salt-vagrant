@@ -1,0 +1,18 @@
+---
+- role: salt-master
+  servers:
+    - name: master-1
+      box: puppetlabs/centos-6.6-64-nocm
+      ram: 2048
+      ip: 192.168.8.10
+
+- role: salt-minion
+  servers:
+    - name: minion-1
+      box: puppetlabs/centos-6.6-64-nocm
+      ram: 2048
+      ip: 192.168.8.11
+    - name: minion-2
+      box: puppetlabs/centos-6.6-64-nocm
+      ram: 2048
+      ip: 192.168.8.12

@@ -1,0 +1,5 @@
+---
+# FILE: roles/salt-master/tasks/main.yml
+#
+
+- include: install.yml tags=salt-master_install

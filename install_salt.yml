@@ -1,0 +1,36 @@
+---
+# FILE: install_salt.yml
+#
+#
+
+# Apply the salt master role
+- hosts: salt-master
+  remote_user: root
+  sudo: yes
+  roles:
+    - { role: base-linux, tags: base-linux }
+    - { role: base-salt, tags: base-salt }
+    - { role: salt-master, tags: salt-master }
+
+# Apply the salt minion role
+- hosts: salt-minion
+  remote_user: root
+  sudo: yes
+  roles:
+    - { role: base-linux, tags: base-linux }
+    - { role: base-salt, tags: base-salt }
+    - { role: salt-minion, tags: salt-minion }
+
+# Auto Accept the minions
+- hosts: salt-master
+  remote_user: root
+  sudo: yes
+  tasks:
+    - name: Pause for 30 seconds to allow the minions to attempt to contact the salt-master
+      pause: seconds=30
+
+    - name: Auto accept minion keys
+      shell: /usr/bin/salt-key -A --yes
+      tags: auto-accept-minion-keys
+      register: salt_key_accept
+      failed_when: salt_key_accept.stdout.find("does not match any unaccepted keys") > -1

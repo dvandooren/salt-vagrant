@@ -1,0 +1,5 @@
+---
+# File: roles/salt-master/handlers/main.yml
+
+- name: restart salt-master
+  service: name=salt-master state=restarted

@@ -1,0 +1,9 @@
+---
+# FILE: roles/base-salt/tasks/pre_install.yml
+#
+- name: Install EPEL RPM
+  yum: name='{{ epel_rpm_url }}' state=present
+
+- name: Install COPR-ZeroMQ4 Repo file
+  get_url: url='{{ zeromq4_copr_rpm_url }}' dest='/etc/yum.repos.d/' 
+  when: use_zeromq4 is defined

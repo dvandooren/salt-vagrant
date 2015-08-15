@@ -1,0 +1,10 @@
+---
+# FILE: roles/base-salt/tasks/install.yml
+#
+
+- name: Install ZeroMQ4
+  yum: name='zeromq' state=present
+  when: use_zeromq4 is defined
+
+- name: Install Base Salt RPM and dependancies
+  yum: name='salt' state=present

@@ -1,0 +1,5 @@
+---
+# File: roles/salt-minion/handlers/main.yml
+
+- name: restart salt-minion
+  service: name=salt-minion state=restarted

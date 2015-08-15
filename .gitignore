@@ -1,0 +1,42 @@
+### VMS Install specific files that we do not want to contaminate the git repo
+hosts
+group_vars/all/secret
+envs/*.secret
+!envs/vagrant.secret
+!envs/sample.secret
+
+### do not add the RPMs to git
+*.rpm
+
+### do not add the Zips to git
+*.zip
+
+### do not add bin files
+*.bin
+
+### Ansible filed runs
+*.retry
+.ansible/
+
+### SSH keys
+.ssh/
+.rnd
+
+### Vagrant
+.vagrant/
+
+### Git
+.gitconfig
+
+### Bash
+.bash_history
+.bash_logout
+.bashrc
+.bash_profile
+
+### Vim swp files #
+*.swo
+*.swp
+*~
+.viminfo
+.vim/

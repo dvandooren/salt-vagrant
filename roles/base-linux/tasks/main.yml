@@ -1,0 +1,5 @@
+---
+# FILE: roles/base-linux/tasks/main.yml
+#
+
+- include: install.yml tags=base-linux_install

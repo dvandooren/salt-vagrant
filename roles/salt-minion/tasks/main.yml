@@ -1,0 +1,5 @@
+---
+# FILE: roles/salt-minion/tasks/main.yml
+#
+
+- include: install.yml tags=salt-minion_install

@@ -1,0 +1,5 @@
+[salt-master]
+master-1 ansible_ssh_host=192.168.8.10 ansible_ssh_user=vagrant ansible_sudo=true  ansible_ssh_private_key_file=.vagrant/machines/master-1/virtualbox/private_key
+[salt-minion]
+minion-1 ansible_ssh_host=192.168.8.11 ansible_ssh_user=vagrant ansible_sudo=true  ansible_ssh_private_key_file=.vagrant/machines/minion-1/virtualbox/private_key
+minion-2 ansible_ssh_host=192.168.8.12 ansible_ssh_user=vagrant ansible_sudo=true  ansible_ssh_private_key_file=.vagrant/machines/minion-2/virtualbox/private_key

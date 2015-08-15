@@ -1,0 +1,76 @@
+---
+# FILE: roles/base-linux/tasks/install.yml
+#
+
+- name: Disable proxy caching for yum
+  lineinfile: dest=/etc/yum.conf regexp="http_caching=none" line="http_caching=none" state=present
+  when: yum.disable_cache is defined
+
+- name: CentOS/RHEL - Add Proxy to yum.conf
+  lineinfile: dest=/etc/yum.conf regexp="proxy=" line="proxy={{ yum.proxy }}" state=present
+  when: yum.proxy is defined
+
+- name: Install libselinux-python so we can ensure SELinux is disabled
+  yum: name=libselinux-python state=present
+
+- name: Disable SELinux
+  selinux: state=disabled
+  register: SELinuxChanges
+
+- name: Reboot since we changed selinux
+  shell: nohup bash -c "sleep 2 && reboot" &
+  async: 0
+  poll: 0
+  when: SELinuxChanges.changed
+
+- debug: msg="NOTE If you are proxying ssh connections via a jumphost/bastion server the next task will time out and you will need to run the playbook again"
+  when: SELinuxChanges.changed
+
+- name: Waiting for server to come back online
+  local_action: wait_for host={{ ansible_ssh_host }} state=started port=22 delay=10 timeout=300
+  sudo: false
+  when: SELinuxChanges.changed
+
+- name: Set HOSTNAME/FQDN
+  hostname: name={{ inventory_hostname }}.{{ domain }}
+
+- name: Check current timezone
+  shell: date +%Z
+  register: current_zone
+  changed_when: False
+
+- name: Set timezone
+  file: src=/usr/share/zoneinfo/{{ timezone }}  dest=/etc/localtime state=link force=yes
+  when: current_zone.stdout != "{{ timezone }}"
+
+- name: Ensure ntpd is installed
+  yum: name=ntp state=present
+
+- name: Update ntp.conf
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes owner=root group=root mode=0644
+  notify: restart ntpd
+
+- name: Update NTPD step-tickers
+  template: src=step-tickers.j2 dest=/etc/ntp/step-tickers backup=yes owner=root group=root mode=0644
+  notify: restart ntpd
+
+- name: Enable NTPD
+  service: name=ntpd enabled=yes
+  notify: restart ntpd
+
+- name: Disable IPTables
+  service: name=iptables state=stopped enabled=no
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int <= 6
+
+- name: Disable IP6Tables
+  service: name=ip6tables state=stopped enabled=no
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int <= 6
+
+- name: Disable firewalld
+  service: name=firewalld state=stopped enabled=no
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
+
+- name: Build /etc/hosts
+  lineinfile: dest=/etc/hosts regexp='.*{{ item }} {{ item }}.{{ domain }}$' line="{{ hostvars[item].ansible_ssh_host }} {{ item }} {{ item }}.{{ domain }}" state=present
+  when: hostvars[item].ansible_ssh_host is defined
+  with_items: groups['all']

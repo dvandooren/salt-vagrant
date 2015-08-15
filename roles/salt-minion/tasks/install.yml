@@ -1,0 +1,14 @@
+---
+# FILE: roles/salt-minion/tasks/install.yml
+#
+
+- name: Install Salt Minion
+  yum: name='salt-minion' state=present
+  notify: restart salt-minion
+
+- name: Copy over salt-minion config file
+  template: src=minion.j2 dest=/etc/salt/minion owner=root group=root mode=0640
+  notify: restart salt-minion
+
+- name: Enable salt-minion service
+  service: name=salt-minion enabled=yes
