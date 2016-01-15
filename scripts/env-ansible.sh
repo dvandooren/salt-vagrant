@@ -3,6 +3,8 @@
 # Wrapper tool to ease the use of ansible with multiple variable files for different projects
 #
 # This script should be run from the main project dir (ie. the dir that has the playbooks and the envs dir under it)
+#
+# This script is based on the Apache Licensed openstak-ansible script created and (c) 2014, Kevin Carter <kevin.carter@rackspace.com>
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH}"
 

@@ -1,0 +1,11 @@
+---
+# FILE: upload_salt_states.yml
+#
+# This playbook uploads the salt state files from the salt-srv dir to the salt master
+#
+- hosts: salt-master
+  remote_user: root
+  sudo: yes
+  tasks:
+    - name: Upload salt state files to salt-master
+      copy: src=salt-srv/ dest=/srv/salt/ owner=root group=root mode=0664

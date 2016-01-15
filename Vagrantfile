@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 require 'yaml'
 
 # Read YAML file with box details
-vagrantServers = YAML.load_file('vagrant-servers.yml')
+vagrantServers = YAML.load_file(File.join(File.dirname(__FILE__), 'vagrant-servers.yml')
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
